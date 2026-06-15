@@ -46,7 +46,7 @@ Keep alongside the executable:
 ```bash
 dotnet publish PatchGUIlite/PatchGUIlite.csproj -c Release -r win-x64 --self-contained true -p:Platform=x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:IncludeAllContentForSelfExtract=true -o artifacts/self-contained-win-x64
 ```
-Output: `artifacts/self-contained-win-x64/PatchGUIlite.exe`, `artifacts/self-contained-win-x64/lang/`, and `artifacts/self-contained-win-x64/T3ppNativelite_Release_x64.dll`.
+Output directory: `artifacts/self-contained-win-x64/`.
 
 ## Publish (Hybrid Bundle)
 ```bash
