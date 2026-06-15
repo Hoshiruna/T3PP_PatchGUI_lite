@@ -11,7 +11,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
 	<UseWindowsForms>true</UseWindowsForms>
-	<Platforms>AnyCPU;ARM64;x86;x64</Platforms>
+	<Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
     <ApplicationIcon>res\t3pp-ico.ico</ApplicationIcon>
   </PropertyGroup>
 
@@ -25,14 +27,16 @@
     <Content Include="T3ppNativelite_Debug_x64.dll" Condition="'$(Configuration)'=='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Content Include="T3ppNativelite_Release_x64.dll" Condition="'$(Configuration)'!='Debug'">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
     <Resource Include="res\t3pp-ico.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Resource>
   </ItemGroup>
 
@@ -44,6 +48,8 @@
   <ItemGroup>
     <None Include="lang\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
 
@@ -51,5 +57,17 @@
     <PackageReference Include="AvalonEdit" Version="6.3.1.120" />
     <PackageReference Include="WPF-UI" Version="4.0.3" />
   </ItemGroup>
+
+  <Target Name="ExposeManagedAssemblyInSingleFilePublish"
+          AfterTargets="ComputeFilesToPublish"
+          Condition="'$(PublishSingleFile)' == 'true' and '$(ExposeManagedAssemblyInPublish)' == 'true'">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(TargetPath)" Condition="Exists('$(TargetPath)')">
+        <RelativePath>$(AssemblyName).dll</RelativePath>
+        <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 
 </Project>

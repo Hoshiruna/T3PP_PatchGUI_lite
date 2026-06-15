@@ -15,9 +15,8 @@ namespace PatchGUIlite
         {
             try
             {
-                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string path = Path.Combine(baseDir, "lang", $"{langCode}.json");
-                if (!File.Exists(path))
+                string? path = FindLanguageFile(langCode);
+                if (path == null)
                 {
                     if (!langCode.Equals(DefaultLang, StringComparison.OrdinalIgnoreCase))
                     {
@@ -41,6 +40,34 @@ namespace PatchGUIlite
             {
                 // ignore localization load failures
             }
+        }
+
+        private static string? FindLanguageFile(string langCode)
+        {
+            string fileName = Path.Combine("lang", $"{langCode}.json");
+
+            foreach (string? baseDir in GetLanguageBaseDirectories())
+            {
+                if (string.IsNullOrWhiteSpace(baseDir))
+                    continue;
+
+                string path = Path.Combine(baseDir, fileName);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            return null;
+        }
+
+        private static IEnumerable<string?> GetLanguageBaseDirectories()
+        {
+            string? processPath = Environment.ProcessPath;
+            if (!string.IsNullOrWhiteSpace(processPath))
+                yield return Path.GetDirectoryName(processPath);
+
+            yield return AppContext.BaseDirectory;
+            yield return AppDomain.CurrentDomain.BaseDirectory;
+            yield return Environment.CurrentDirectory;
         }
 
         public static string Get(string key, string fallback)

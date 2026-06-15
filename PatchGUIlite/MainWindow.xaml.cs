@@ -45,6 +45,7 @@ namespace PatchGUIlite
         {
             _isInitializing = true;
             InitializeComponent();
+            InitializeLogFiles();
 
             PatchGUIlite.Core.T3ppDiff.DebugLog = msg => AppendConsoleLine(msg);
 
@@ -511,6 +512,9 @@ namespace PatchGUIlite
 
         private async void GenStartDiffButton_Click(object sender, RoutedEventArgs e)
         {
+            if (_isGenerating)
+                return;
+
             string sourcePath = GenSourceBox.Text.Trim();
             string targetPath = GenTargetBox.Text.Trim();
 
@@ -738,6 +742,26 @@ namespace PatchGUIlite
         private void AppendGenConsoleLine(string line)
         {
             AppendConsoleLine(line);
+        }
+
+        private static void InitializeLogFiles()
+        {
+#if DEBUG
+            ResetLogFile(RunLogPath);
+#endif
+            ResetLogFile(ErrorLogPath);
+        }
+
+        private static void ResetLogFile(string path)
+        {
+            try
+            {
+                File.WriteAllText(path, string.Empty);
+            }
+            catch
+            {
+                // ignore file reset failure
+            }
         }
 
         private static void WriteLogEntry(string path, string message)

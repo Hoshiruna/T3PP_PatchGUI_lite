@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace PatchGUIlite.Core
@@ -19,6 +20,31 @@ namespace PatchGUIlite.Core
 #else
             private const string DllName = "T3ppNativelite_Release_x64.dll";
 #endif
+
+            static Native()
+            {
+                NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, ResolveNativeDll);
+            }
+
+            private static IntPtr ResolveNativeDll(string libraryName, System.Reflection.Assembly assembly, DllImportSearchPath? searchPath)
+            {
+                if (!string.Equals(libraryName, DllName, StringComparison.OrdinalIgnoreCase))
+                    return IntPtr.Zero;
+
+                string? processPath = Environment.ProcessPath;
+                if (!string.IsNullOrWhiteSpace(processPath))
+                {
+                    string? processDir = Path.GetDirectoryName(processPath);
+                    if (!string.IsNullOrWhiteSpace(processDir))
+                    {
+                        string nativePath = Path.Combine(processDir, DllName);
+                        if (File.Exists(nativePath))
+                            return NativeLibrary.Load(nativePath);
+                    }
+                }
+
+                return IntPtr.Zero;
+            }
 
             [DllImport(DllName, CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
             internal static extern int t3pp_apply_patch_from_file(
@@ -136,12 +162,12 @@ namespace PatchGUIlite.Core
             if (rc == 1)
             {
                 // 1 = no changes found
-                throw new InvalidOperationException("????????,????????????");
+                throw new InvalidOperationException("No file changes were found; no patch was generated.");
             }
 
             if (rc != 0)
             {
-                throw new InvalidOperationException($"????????,???:{rc}");
+                throw new InvalidOperationException($"Patch generation failed with native error code: {rc}");
             }
         }
     }

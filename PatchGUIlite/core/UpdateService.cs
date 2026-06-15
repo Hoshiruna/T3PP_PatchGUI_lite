@@ -340,11 +340,12 @@ namespace PatchGUIlite.Core
                 trimmed = trimmed.Substring(0, whitespaceIndex);
             }
 
-            if (!Version.TryParse(trimmed, out version))
+            if (!Version.TryParse(trimmed, out Version? parsedVersion) || parsedVersion == null)
             {
                 return false;
             }
 
+            version = parsedVersion;
             int build = version.Build < 0 ? 0 : version.Build;
             int revision = version.Revision < 0 ? 0 : version.Revision;
             version = new Version(version.Major, version.Minor, build, revision);
