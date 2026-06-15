@@ -46,6 +46,9 @@ x64/
 T3ppNative/x64/
 T3ppNativeLite/
 
+# Publish artifacts
+artifacts/
+
 # Compiled artifacts
 *.exe
 *.lib

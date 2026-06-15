@@ -29,13 +29,10 @@ jobs:
           dotnet publish PatchGUIlite/PatchGUIlite.csproj
           -c Release
           -r win-x64
-          --self-contained true
+          --self-contained false
           -p:Platform=x64
           -p:PublishSingleFile=true
           -p:ExposeManagedAssemblyInPublish=true
-          -p:IncludeNativeLibrariesForSelfExtract=true
-          -p:IncludeAllContentForSelfExtract=true
-          -p:EnableCompressionInSingleFile=true
           -p:DebugType=None
           -p:DebugSymbols=false
           -o artifacts/hybrid-win-x64

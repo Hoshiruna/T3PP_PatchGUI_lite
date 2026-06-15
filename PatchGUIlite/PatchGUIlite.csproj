@@ -54,6 +54,19 @@
     <PackageReference Include="WPF-UI" Version="4.0.3" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(ExposeManagedAssemblyInPublish)' == 'true'">
+    <Content Update="T3ppNativelite_Debug_x64.dll">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="T3ppNativelite_Release_x64.dll">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <None Update="lang\**\*.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </None>
+  </ItemGroup>
+
   <Target Name="ExposeManagedAssemblyInSingleFilePublish"
           AfterTargets="ComputeFilesToPublish"
           Condition="'$(PublishSingleFile)' == 'true' and '$(ExposeManagedAssemblyInPublish)' == 'true'">

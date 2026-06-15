@@ -49,6 +49,8 @@ dotnet publish PatchGUIlite/PatchGUIlite.csproj -c Release -r win-x64 --self-con
 Output directory: `artifacts/self-contained-win-x64/`.
 
 ## Publish (Hybrid Bundle)
+Hybrid Bundle is framework-dependent to keep `PatchGUIlite.exe` smaller. It requires the .NET 8 Desktop Runtime x64 on the target machine.
+
 ```bash
 dotnet publish PatchGUIlite/PatchGUIlite.csproj -p:PublishProfile=FolderProfile
 ```
